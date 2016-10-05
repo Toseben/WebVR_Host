@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Creating Basic Geometry // Arttu Koskela</title>
+		<title>interactiveGeometry_flatShaded // Arttu Koskela</title>
 	    <meta charset="utf-8">
     	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     	<link rel=stylesheet href="css/base.css"/>
@@ -46,11 +46,15 @@
 				stats.domElement.style.bottom = '0px';
 				stats.domElement.style.zIndex = 100;
 				container.appendChild( stats.domElement );
-
-				var mat = new THREE.MeshBasicMaterial( { color: "red", 
-					side: THREE.DoubleSide
-				} ) ;
-
+				// SKYBOX
+				var skyBoxGeometry = new THREE.CubeGeometry( 100, 100, 100 );
+				var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x6fcb9f, side: THREE.BackSide } );
+				var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
+				scene.add( skyBox );
+				// SHADER
+				var mat = new THREE.MeshBasicMaterial( { color: 0xffe28a, 
+					side: THREE.DoubleSide } ) ;
+				// GEOMETRY
 				var geometry = new THREE.TorusGeometry( 1, 0.5, 50, 100 );
 				var obj = new THREE.Mesh( geometry, mat );
 				scene.add( obj );
