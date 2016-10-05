@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<title>Creating Basic Geometry // Arttu Koskela</title>
+	    <meta charset="utf-8">
+    	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    	<link rel=stylesheet href="css/base.css"/>
+	</head>
+	<body>
+
+		<script src="js/three.js"></script>
+		<script src="js/THREEx.FullScreen.js"></script>
+		<script src="js/THREEx.WindowResize.js"></script>
+		<script src="js/OrbitControls.js"></script>
+		<script src="js/Stats.js"></script>
+		
+		<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+		<script>
+
+			var scene, camera, renderer, controls;
+
+			init();
+			animate();
+
+			function init() {
+				// SCENE
+				scene = new THREE.Scene();
+				// CAMERA
+				var w = window.innerWidth, h = window.innerHeight;
+				camera = new THREE.PerspectiveCamera( 60, w / h, 0.1, 1000 );
+				scene.add( camera );
+				camera.position.set( 0, 2, 4 );
+				camera.lookAt( scene.position );
+				// RENDERER
+				renderer = new THREE.WebGLRenderer();
+				container = document.getElementById( 'ThreeJS' );
+				renderer.setSize( w, h );
+				container.appendChild( renderer.domElement );
+				// EVENTS
+				THREEx.WindowResize( renderer, camera );
+				THREEx.FullScreen.bindKey( { charCode: 'f'.charCodeAt(0) } );
+				// CONTROLS
+				controls = new THREE.OrbitControls( camera, renderer.domElement );
+				// STATS
+				stats = new Stats();
+				stats.domElement.style.position = 'absolute';
+				stats.domElement.style.bottom = '0px';
+				stats.domElement.style.zIndex = 100;
+				container.appendChild( stats.domElement );
+
+				var mat = new THREE.MeshBasicMaterial( { color: "red", 
+					side: THREE.DoubleSide
+				} ) ;
+
+				var geometry = new THREE.TorusGeometry( 1, 0.5, 50, 100 );
+				var obj = new THREE.Mesh( geometry, mat );
+				scene.add( obj );
+			}
+
+			function animate() {
+				requestAnimationFrame( animate );
+				render();
+				update();
+			}
+
+			function update() {
+				controls.update();
+				stats.update();
+			}
+
+			function render() {
+				renderer.render( scene, camera );
+			}
+
+		</script>
+	</body>
+</html>
