@@ -20,15 +20,15 @@
 				var w = window.innerWidth, h = window.innerHeight;
 				camera = new THREE.PerspectiveCamera( 60, w / h, 0.1, 1000 );
 				scene.add( camera );
-				camera.position.set( 0, 150, 400 );
+				camera.position.set( 0, 25, 50 );
 				camera.lookAt( scene.position );
 				// RENDERER
 				renderer = new THREE.WebGLRenderer();
 				renderer.setSize( w, h );
 				document.body.appendChild( renderer.domElement );
 				// EVENTS
-				//THREEx.WindowResize(renderer, camera);
-				//THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+				THREEx.WindowResize(renderer, camera);
+				THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
 
 				var mat = new THREE.MeshBasicMaterial( { color: "red", 
 					side: THREE.DoubleSide
