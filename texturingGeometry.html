@@ -12,14 +12,11 @@
 		<script src="js/THREEx.WindowResize.js"></script>
 		<script src="js/OrbitControls.js"></script>
 		<script src="js/Stats.js"></script>
-		<script src="js/DAT.GUI.min.js"></script>
 		
 		<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
-		<div id="Console" style="position: absolute; left:0px; top:0px"></div>
 		<script>
 
 			var scene, camera, renderer, controls;
-			var gui, parameters;
 
 			init();
 			animate();
@@ -29,9 +26,9 @@
 				scene = new THREE.Scene();
 				// CAMERA
 				var w = window.innerWidth, h = window.innerHeight;
-				camera = new THREE.PerspectiveCamera( 60, w / h, 1, 20000 );
+				camera = new THREE.PerspectiveCamera( 60, w / h, 0.1, 1000 );
 				scene.add( camera );
-				camera.position.set( 0, 400, 800 );
+				camera.position.set( 0, 2, 4 );
 				camera.lookAt( scene.position );
 				// RENDERER
 				renderer = new THREE.WebGLRenderer();
@@ -50,62 +47,21 @@
 				stats.domElement.style.zIndex = 100;
 				container.appendChild( stats.domElement );
 				// SKYBOX
-				var skyColor = 0x6fcb9f;
-				var skyBoxGeometry = new THREE.CubeGeometry( 5000, 5000, 5000 );
-				var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: skyColor, side: THREE.BackSide } );
+				var skyBoxGeometry = new THREE.CubeGeometry( 100, 100, 100 );
+				var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x6fcb9f, side: THREE.BackSide } );
 				var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
 				scene.add( skyBox );
-				scene.fog = new THREE.FogExp2( skyColor, 0.00025 );
-				// LIGHT
-				var light = new THREE.PointLight( 0xffffff );
-				light.position.set( 0, 250, 100 );
-				scene.add( light );
-				var lightBulb = new THREE.Mesh( 
-					new THREE.IcosahedronGeometry( 10, 4 ),
-					new THREE.MeshBasicMaterial( 0xffffff ) );
-				lightBulb.position.set( light.position.x, light.position.y, light.position.z );
-				scene.add( lightBulb );
-
-				// FLOOR
-				var textureLoader = new THREE.TextureLoader();
-				floorTexture = textureLoader.load( 'img/leather.jpg' );
-				var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
-				var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
-				var floor = new THREE.Mesh( floorGeometry, floorMaterial);
-				scene.add(floor);
-
 				// SHADER
-				var objColor = 0xffe28a;
-				var mat = new THREE.MeshBasicMaterial( { color: objColor } ) ;
-				var matLamb = new THREE.MeshLambertMaterial( { color: objColor } ) ;
-				var matPhong = new THREE.MeshPhongMaterial( { color: objColor } ) ;
+				// OLD_METHOD var texture = THREE.ImageUtils.loadTexture( "img/uv.jpg", undefined, render );
+				var loader = new THREE.TextureLoader();
+				var texture = loader.load('img/uv.jpg');
+				var mat = new THREE.MeshBasicMaterial( { color: 0xffffff, 
+					map: texture, 
+					side: THREE.DoubleSide } ) ;
 				// GEOMETRY
-				var sphereGeo = new THREE.SphereGeometry( 100, 32, 64 );
-
-				var sphere_1 = new THREE.Mesh( sphereGeo.clone(), mat );
-				sphere_1.position.x = -250;
-				scene.add( sphere_1 );
-
-				var sphere_2 = new THREE.Mesh( sphereGeo.clone(), matLamb );
-				sphere_2.position.x = 0;
-				scene.add( sphere_2 );
-
-				var sphere_3 = new THREE.Mesh( sphereGeo.clone(), matPhong );
-				sphere_3.position.x = 250;
-				scene.add( sphere_3 );
-
-				// GUI
-				parameters = { color: objColor};
-				gui = new dat.GUI();
-				var geoColor = gui.addColor( parameters, 'color' ).name( 'Diffuse Color').listen();
-				geoColor.onChange(function( value )
-				{	sphere_1.material.color.setHex( value ),
-					sphere_2.material.color.setHex( value ),
-					sphere_3.material.color.setHex( value ) } );
-
-				// CONSOLE
-				console = document.getElementById( 'Console' );
-				//console.appendChild( document.createTextNode( 'TEXTURE: ' + leatherTexture ) );
+				var geometry = new THREE.SphereGeometry( 1, 32, 64 );
+				var obj = new THREE.Mesh( geometry, mat );
+				scene.add( obj );
 			}
 
 			function animate() {
