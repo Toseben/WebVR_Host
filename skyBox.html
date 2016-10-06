@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Texturing Geometry // Arttu Koskela</title>
+		<title>360 Image // Arttu Koskela</title>
 	    <meta charset="utf-8">
     	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     	<link rel=stylesheet href="css/base.css"/>
@@ -28,7 +28,7 @@
 				var w = window.innerWidth, h = window.innerHeight;
 				camera = new THREE.PerspectiveCamera( 60, w / h, 0.1, 1000 );
 				scene.add( camera );
-				camera.position.set( 0, 2, 4 );
+				camera.position.set( -1, 0, 0 );
 				camera.lookAt( scene.position );
 				// RENDERER
 				renderer = new THREE.WebGLRenderer();
@@ -46,22 +46,22 @@
 				stats.domElement.style.bottom = '0px';
 				stats.domElement.style.zIndex = 100;
 				container.appendChild( stats.domElement );
+				// AXES
+				var axes = new THREE.AxisHelper( 100 );
+				scene.add( axes );
 				// SKYBOX
+				var loader = new THREE.TextureLoader();
+				var materialArray = [];
+				for (var i = 0; i < 6; i++ ){
+					materialArray.push( new THREE.MeshBasicMaterial( {
+						map: loader.load( 'img/cubeMap_' + (i + 1) + '.jpg' ),
+						side: THREE.BackSide
+					} ) )
+				}
 				var skyBoxGeometry = new THREE.CubeGeometry( 100, 100, 100 );
-				var skyBoxMaterial = new THREE.MeshBasicMaterial( { color: 0x6fcb9f, side: THREE.BackSide } );
+				var skyBoxMaterial = new THREE.MeshFaceMaterial( materialArray );
 				var skyBox = new THREE.Mesh( skyBoxGeometry, skyBoxMaterial );
 				scene.add( skyBox );
-				// SHADER
-				// OLD_METHOD var texture = THREE.ImageUtils.loadTexture( "img/uv.jpg", undefined, render );
-				var loader = new THREE.TextureLoader();
-				var texture = loader.load('img/uv.jpg');
-				var mat = new THREE.MeshBasicMaterial( { color: 0xffffff, 
-					map: texture, 
-					side: THREE.DoubleSide } ) ;
-				// GEOMETRY
-				var geometry = new THREE.SphereGeometry( 1, 32, 64 );
-				var obj = new THREE.Mesh( geometry, mat );
-				scene.add( obj );
 			}
 
 			function animate() {
