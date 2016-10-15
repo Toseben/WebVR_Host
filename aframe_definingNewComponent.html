@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Animate Fog</title>
+		<meta name="description" content="Animate Fog">
+		<script src="https://aframe.io/releases/0.3.2/aframe.min.js"></script>
+	</head>
+	<body>
+	<script>
+		// Component
+		AFRAME.registerComponent('snow', {
+			schema: {
+				color: { default: "blue"}
+			},
+
+			init: function () {
+				//Material
+		    	var material = new THREE.LineBasicMaterial({
+	    			color: this.data.color});
+	    		// Geometry
+			    var geometry = new THREE.Geometry();
+			    geometry.vertices.push(
+				    new THREE.Vector3( -10, 0, 0 ),
+				    new THREE.Vector3( 0, 10, 0 ),
+				    new THREE.Vector3( 10, 0, 0 ));
+		    	// Mesh
+			    var line = new THREE.Line( geometry, material );
+			    this.el.object3D.add(line);
+			    // Log
+			    console.log('MESH COLOR: ' + this.data.color)
+			}
+		});
+	</script>
+		<!-- Scene -->
+		<a-scene id='scene' fog="type: exponential; color: #AAB; density: 0.05">
+			<!-- Geometry -->
+				<a-entity position='0 0 -15'>
+					<a-entity snow></a-entity>
+				</a-entity>
+			<!-- Sky -->
+			<a-sky color="#AAB"></a-sky>
+		</a-scene>
+	</body>
+</html>

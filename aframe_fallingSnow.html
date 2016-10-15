@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Animate Fog</title>
+		<meta name="description" content="Animate Fog">
+		<script src="https://aframe.io/releases/0.3.2/aframe.min.js"></script>
+	</head>
+	<body>
+	<script>
+		// Random Function
+		var seed = 1;
+		function getRandom(min, max) {
+			var x = Math.sin(seed++) * 10000;
+			x -= Math.floor(x);
+			x = x * (max - min) + min;
+			return x;}
+		// Component
+		AFRAME.registerComponent('snow', {
+			schema: {
+				color: { default: "white"}
+			},
+
+			init: function () {
+				// Material
+				var loader = new THREE.TextureLoader();
+				var snowTex = loader.load('img/snow.jpg');
+				var snowAlpha = loader.load('img/snowAlpha.jpg');
+				var material = new THREE.MeshBasicMaterial( {color: this.data.color, 
+					transparent: true, alphaMap: snowAlpha, side: THREE.DoubleSide} );
+	    		// Geometry
+    			for (var i = 0; i < 1000; i++) {
+    				var snowGeo = new THREE.PlaneGeometry( 0.1, 0.1 );
+    				var snowFlake = new THREE.Mesh( snowGeo, material );
+
+    				var minPos = -5,
+    					maxPos = 5,
+    					maxRot = 360 * (Math.PI / 180);
+
+    				snowFlake.position.x = getRandom( minPos, maxPos );
+    				snowFlake.position.z = getRandom( minPos, maxPos );
+    				snowFlake.rotation.x = getRandom( 0, maxRot );
+    				snowFlake.rotation.y = getRandom( 0, maxRot );
+    				snowFlake.rotation.z = getRandom( 0, maxRot );
+					this.el.object3D.add(snowFlake);
+				    // Animate
+					var render = function () {
+						snowFlake.rotation.x += 11;
+						requestAnimationFrame(render);
+					}
+    			}
+			    // Log
+			    //console.log('MESH COLOR: ' + getRandom( 0, 0 ))
+			}
+		});
+	</script>
+		<!-- Scene -->
+		<a-scene id='scene' fog="type: exponential; color: #AAB; density: 0.05">
+			<!-- Geometry -->
+				<a-entity position='0 5 -10'>
+					<a-entity snow></a-entity>
+				</a-entity>
+			<!-- Sky -->
+			<a-sky color="#AAB"></a-sky>
+		</a-scene>
+	</body>
+</html>

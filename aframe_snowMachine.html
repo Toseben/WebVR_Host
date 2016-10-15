@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Spheres &amp; Fog</title>
+		<meta name="description" content="Spheres &amp; Fog - A-Frame">
+		<script src="https://aframe.io/releases/0.3.2/aframe.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	</head>
+	<body>
+		<div id="Console" style="position: absolute; left:0px; top:0px"></div>
+		<!-- Scene -->
+		<a-scene id='scene' fog="type: linear; color: #AAB; far: 30; near: 0">
+			<!-- Assets -->
+			<a-assets>
+				<img id="highlight" src="img/radial-highlight.png">
+				<img id="shadow" src="img/radial-shadow-3.png">
+				<img id='power' src='img/power.png'>
+			</a-assets>
+			<!-- Geometry -->
+				<a-image position="0 -.2 5" src="#highlight" rotation="-90 0 0"
+					scale="30 30 30"></a-image>
+				<a-entity position='0 0 -5'>
+					<a-sphere position="0 5.0 0" radius="5.0" color="#F16745"
+						roughness="0.8" width-segments="52" height-segments="52"></a-sphere>
+					<a-image src="#shadow" rotation="-90 0 0" scale="3 3 3"></a-image>
+				</a-entity>
+			<!-- Camera // Cursor // Controls-->
+			<a-entity position="0 0 15">
+				<a-plane position='0 1.5 -2.5' height='1' width='1'
+					material='shader: flat; src:#power'></a-plane>
+				<a-camera>
+					<a-cursor id='cursor'>
+						<a-animation begin="click" easing="ease-in" attribute="scale"
+							fill="backwards" from="0.1 0.1 0.1" to="1 1 1" dur="150"></a-animation>
+					</a-cursor>
+				</a-camera>
+			</a-entity>
+			<!-- Sky -->
+			<a-sky color="#AAB"></a-sky>
+		</a-scene>
+		<script>
+			var scene = $('#scene');		
+			
+			function getRandomInt(min, max) {
+				return Math.floor(Math.random() * (max - min + 1)) + min;
+			}
+
+			var posArray = [];		
+			for(var i = 0; i < 10; i++){
+				// Random Number
+				var randX = getRandomInt(-10, 10);
+				var randZ = getRandomInt(-10, 10);
+				// Sphere
+				var tree = $('<a-sphere radius="2.0" color="#F16745" position="' + randX + ' 2.0 ' + randZ + '"></a-sphere>');
+				scene.append(tree);
+				// Add To Array
+				posArray.push(randX);
+				posArray.push(randZ);
+			}
+
+			AFRAME.registerComponent('mythreejsthing', {
+				schema: {},
+
+				init: function () {
+				    var el = this.el;  // Entity.
+				    var mat = new THREE.MeshBasicMaterial( { color: 0xffe28a, 
+						side: THREE.DoubleSide } ) ;
+					var geometry = new THREE.TorusGeometry( 100, 50, 50, 100 );
+					var mythreejsobject = new THREE.Mesh( geometry, mat ); // ... Create three.js object.
+				    el.setObject3D('mesh', mythreejsobject);
+				}
+			});
+
+			var mat = new THREE.MeshBasicMaterial( { color: 0xffe28a, 
+				side: THREE.DoubleSide } ) ;
+			var geometry = new THREE.TorusGeometry( 100, 50, 50, 100 );
+			var obj = new THREE.Mesh( geometry, mat );
+			scene.append( obj );
+		</script>
+	</body>
+</html>

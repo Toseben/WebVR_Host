@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Interact! • A-Frame</title>
+		<script src="js/aframe.js"></script>
+	</head>
+	<body>
+		<a-scene antialias='true'>
+			<a-sphere color="#FFF" radius='2.5'
+					position="0 0 -7.5" rotation="0 45 0" scale="1 1 1"
+					src="img/uv.jpg">
+				<a-animation attribute='rotation' dur='10000' begin='click' repeat='indefinite' easing='linear' to='0 360 0'></a-animation>
+			</a-sphere>
+			<a-light type='point' color='#AAA' position='0 5 0'></a-light>
+			<a-sky src="img/360_pano.jpg"></a-sky>
+			<a-camera>
+				<a-cursor color="#2E3A87"></a-cursor>
+			</a-camera>
+	    </a-scene>
+	</body>
+</html>	

@@ -7,9 +7,11 @@
 	</head>
 	<body>
 		<a-scene antialias='true'>
-			<a-box color="#EF2D5E" width="3" height="3" depth="3"
-					position="0 0 0" rotation="0 45 0" scale="1 2 1"
-					src="img/leather.jpg"></a-box>
+			<a-sphere color="#FFF" radius='2.5'
+					position="0 0 0" rotation="0 45 0" scale="1 1 1"
+					src="img/uv.jpg">
+				<a-animation attribute='rotation' dur='10000' repeat='indefinite' easing='linear' to='0 360 0'></a-animation>
+			</a-sphere>
 			<a-sky color="#ECECEC"></a-sky>
 			<a-entity position="0 0 7">
 				<a-camera></a-camera>
