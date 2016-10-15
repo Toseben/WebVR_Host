@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Ocean</title>
+		<meta name="description" content="Ocean">
+		<script src="https://aframe.io/releases/0.3.2/aframe.min.js"></script>
+	</head>
+	<body>
+		<script>
+			 AFRAME.registerComponent('box', {
+				play: function () {
+					var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+					var material = new THREE.MeshPhongMaterial( {color: 0x00ff00} );
+					var cube = new THREE.Mesh( geometry, material );
+					this.el.object3D.add(cube);
+				},
+
+				tick: function (t, dt) {
+					this.el.object3D.rotation.x += 0.01;
+					this.el.object3D.rotation.y += 0.01;
+					this.el.object3D.rotation.z += 0.01;
+				}
+			});
+		</script>
+		<!-- Scene -->
+		<a-scene id='scene'>
+			<a-entity box position='0 0 -5'></a-entity>
+		</a-scene>
+	</body>
+</html>

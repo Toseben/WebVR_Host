@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Animate Fog</title>
-		<meta name="description" content="Animate Fog">
+		<title>Animate Snow</title>
+		<meta name="description" content="Animate Snow">
 		<script src="https://aframe.io/releases/0.3.2/aframe.min.js"></script>
 	</head>
 	<body>
@@ -24,7 +23,6 @@
 			init: function () {
 				// Material
 				var loader = new THREE.TextureLoader();
-				var snowTex = loader.load('img/snow.jpg');
 				var snowAlpha = loader.load('img/snowAlpha.jpg');
 				var material = new THREE.MeshBasicMaterial( {color: this.data.color, 
 					transparent: true, alphaMap: snowAlpha, side: THREE.DoubleSide} );
@@ -49,8 +47,10 @@
 						requestAnimationFrame(render);
 					}
     			}
-			    // Log
-			    //console.log('MESH COLOR: ' + getRandom( 0, 0 ))
+			},
+
+			tick: function (t, dt) {
+				this.el.object3D.position.y += getRandom(-0.1, 0.1);
 			}
 		});
 	</script>
