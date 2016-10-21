@@ -1,0 +1,110 @@
+<html lang="en">
+<head>
+	<title>Reflection</title>
+</head>
+<body>
+
+<script src="js/Three.js"></script>
+<script src="js/Stats.js"></script>
+<script src="js/OrbitControls.js"></script>
+<script src="js/THREEx.FullScreen.js"></script>
+<script src="js/THREEx.WindowResize.js"></script>
+
+<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+<script>
+	var container, scene, camera, renderer, controls, stats;
+	var mirrorCube, mirrorCubeCamera;
+	var mirrorSphere, mirrorSphereCamera;
+
+	init();
+	animate();
+	
+	function init() 
+	{
+		// SCENE
+		scene = new THREE.Scene();
+
+		// CAMERA
+		var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+		var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+		camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+		scene.add(camera);
+		camera.position.set(0, 10, 20);
+		camera.lookAt(scene.position);
+
+		// RENDERER
+		renderer = new THREE.WebGLRenderer();
+		renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+		container = document.getElementById( 'ThreeJS' );
+		container.appendChild( renderer.domElement );
+
+		// EVENTS & CONTROLS & STATS
+		THREEx.WindowResize(renderer, camera);
+		THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		stats = new Stats();
+		stats.domElement.style.position = 'absolute';
+		stats.domElement.style.bottom = '0px';
+		stats.domElement.style.zIndex = 100;
+		container.appendChild( stats.domElement );
+
+		// FLOOR
+		var floorTexture = new THREE.ImageUtils.loadTexture( 'img/uv.jpg' );
+		floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
+		floorTexture.repeat.set( 2, 2 );
+		var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
+		var floorGeometry = new THREE.PlaneGeometry(10, 10, 1, 1);
+		var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+		floor.position.y = -0.5;
+		floor.rotation.x = Math.PI / 2;
+		scene.add(floor);
+
+		// SKYBOX
+		var textureLoader = new THREE.TextureLoader();
+		var envTexture = textureLoader.load( 'img/dynamicCubeMap.jpg' );
+		var envMesh = new THREE.Mesh( new THREE.SphereGeometry( 50, 32, 16 ), new THREE.MeshBasicMaterial( { map: envTexture, side: THREE.DoubleSide } ) );
+		scene.add( envMesh );
+
+		// TORUS
+		var cubeGeom = new THREE.TorusGeometry( 1, 0.5, 32, 100 )
+		mirrorCubeCamera = new THREE.CubeCamera( 0.1, 100, 512 );
+		scene.add( mirrorCubeCamera );
+		var mirrorCubeMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorCubeCamera.renderTarget } );
+		mirrorCube = new THREE.Mesh( cubeGeom, mirrorCubeMaterial );
+		var cubePos = new THREE.Vector3( -2, 1, 0 );
+		mirrorCube.position.copy( cubePos );
+		mirrorCubeCamera.position.set( -2, 1, 0 );
+		scene.add(mirrorCube);	
+		
+		// SPHERE
+		var sphereGeom =  new THREE.SphereGeometry( 1.5, 50, 50 );
+		mirrorSphereCamera = new THREE.CubeCamera( 0.1, 100, 512 );
+		scene.add( mirrorSphereCamera );
+		var mirrorSphereMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorSphereCamera.renderTarget } );
+		mirrorSphere = new THREE.Mesh( sphereGeom, mirrorSphereMaterial );
+		var spherePos = new THREE.Vector3( 2, 1, 0 );
+		mirrorSphere.position.copy( spherePos );
+		mirrorSphereCamera.position.copy( spherePos );
+		scene.add(mirrorSphere);
+	}
+
+	function animate() {
+	    requestAnimationFrame( animate );
+		render();		
+		update();
+	}
+
+	function update() {
+		controls.update();
+		stats.update();
+	}
+
+	function render() {
+		mirrorCubeCamera.updateCubeMap( renderer, scene );
+		mirrorSphereCamera.updateCubeMap( renderer, scene );
+		renderer.render( scene, camera );
+	}
+
+</script>
+</body>
+</html>
