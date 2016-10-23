@@ -65,6 +65,16 @@
 		var envMesh = new THREE.Mesh( new THREE.SphereGeometry( 50, 32, 16 ), new THREE.MeshBasicMaterial( { map: envTexture, side: THREE.DoubleSide } ) );
 		scene.add( envMesh );
 
+		// LIGHT
+		var light = new THREE.PointLight( 0xffffff );
+		light.position.set( 0, 250, 100 );
+		scene.add( light );
+		var lightBulb = new THREE.Mesh( 
+			new THREE.IcosahedronGeometry( 10, 4 ),
+			new THREE.MeshBasicMaterial( 0xffffff ) );
+		lightBulb.position.set( light.position.x, light.position.y, light.position.z );
+		scene.add( lightBulb );
+
 		// TORUS
 		var cubeGeom = new THREE.TorusGeometry( 1, 0.5, 32, 100 )
 		mirrorCubeCamera = new THREE.CubeCamera( 0.1, 100, 512 );
@@ -81,7 +91,8 @@
 		mirrorSphereCamera = new THREE.CubeCamera( 0.1, 100, 512 );
 		scene.add( mirrorSphereCamera );
 		var mirrorSphereMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorSphereCamera.renderTarget } );
-		mirrorSphere = new THREE.Mesh( sphereGeom, mirrorSphereMaterial );
+		var sphereMat = new THREE.MeshPhongMaterial( { color: 0xffffff, refractionRatio: 1.0, specular: 0xffffff, envMap: mirrorSphereCamera.renderTarget } );
+		mirrorSphere = new THREE.Mesh( sphereGeom, sphereMat );
 		var spherePos = new THREE.Vector3( 2, 1, 0 );
 		mirrorSphere.position.copy( spherePos );
 		mirrorSphereCamera.position.copy( spherePos );
